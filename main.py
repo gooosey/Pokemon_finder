@@ -57,7 +57,7 @@ while True:
     else:
         suggestions = difflib.get_close_matches(pokemon_name, pokemons, n=1, cutoff=0.7)
         if suggestions:
-            print(f"Did you mean {suggestions}?")
+            print(f"Did you mean {suggestions[0]}?")
         else:
             print("I don't think that exists")
 
