@@ -35,7 +35,7 @@ def lst_pokemons(lst):
         return poke_lst["results"]
     else:
         print(f"Failed to retrieve data {response.status_code}")
-
+        return []
 pokemons = [p["name"] for p in lst_pokemons("https://pokeapi.co/api/v2/pokemon?limit=10000")]
 
 # Get custom input
