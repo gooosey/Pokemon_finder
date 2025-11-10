@@ -36,10 +36,16 @@ def lst_pokemons(lst):
     else:
         print(f"Failed to retrieve data {response.status_code}")
         return []
-pokemons = [p["name"] for p in lst_pokemons("https://pokeapi.co/api/v2/pokemon?limit=10000")]
+# Fetch and cache all Pokémon names on demand
+def get_all_pokemon_names():
+    if not hasattr(get_all_pokemon_names, "cache"):
+        poke_list = lst_pokemons("https://pokeapi.co/api/v2/pokemon?limit=10000")
+        get_all_pokemon_names.cache = [p["name"] for p in poke_list]
+    return get_all_pokemon_names.cache
 
 # Get custom input
 while True:
+    pokemons = get_all_pokemon_names()
     pokemon_name = input("What pokemon would you like to inquire about? (type 'Quit' to leave) \n").lower()
 
     if pokemon_name == "quit":
