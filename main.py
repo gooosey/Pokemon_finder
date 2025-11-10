@@ -1,5 +1,6 @@
 import requests
 import json
+import difflib
 
 base_url = "https://pokeapi.co/api/v2/"
 
@@ -23,10 +24,39 @@ def get_location(location):
     else:
         print(f"Failed to retrieve data {response.status_code}")
 
-pokemon_name = input("What pokemon would you like to inquire about? \n")
+
+# Get all pokemons
+def lst_pokemons(lst):
+    url = lst
+    response = requests.get(url)
+
+    if response.status_code == 200:
+        poke_lst = response.json()
+        return poke_lst["results"]
+    else:
+        print(f"Failed to retrieve data {response.status_code}")
+
+pokemons = [p["name"] for p in lst_pokemons("https://pokeapi.co/api/v2/pokemon?limit=10000")]
+
+# Get custom input
+while True:
+    pokemon_name = input("What pokemon would you like to inquire about? (type 'Quit' to leave) \n").lower()
+
+    if pokemon_name == "quit":
+        break
+
+    if pokemon_name in pokemons:
+        print(f"You chose {pokemon_name}")
+        break
+    else:
+        suggestions = difflib.get_close_matches(pokemon_name, pokemons, n=1, cutoff=0.7)
+        if suggestions:
+            print(f"Did you mean {suggestions}?")
+        else:
+            print("I don't think that exists")
+
+
 poke_info = get_pokemon(pokemon_name)
-
-
 location = get_location(poke_info["location_area_encounters"])
 
 if location:
